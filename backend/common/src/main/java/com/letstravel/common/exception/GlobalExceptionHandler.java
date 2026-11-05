@@ -103,7 +103,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAllOtherExceptions(Exception ex) {
-        log.error("Unhandled exception occurred in user-service: ", ex);
+        log.error("Unhandled exception occurred: ", ex);
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR",
                 "An unexpected internal server error occurred.", null);
     }
