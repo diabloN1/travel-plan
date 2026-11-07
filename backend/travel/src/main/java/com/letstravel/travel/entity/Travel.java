@@ -42,6 +42,9 @@ public class Travel {
     @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Departure> departures = new ArrayList<>();
 
+    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transportation> transportations = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(name = "travel_destinations", joinColumns = @JoinColumn(name = "travel_id"), inverseJoinColumns = @JoinColumn(name = "destination_id"))
     private List<Destination> destinations = new ArrayList<>();
