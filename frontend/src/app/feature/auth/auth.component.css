@@ -1,0 +1,14 @@
+.auth-hero {
+  background-image:
+    linear-gradient(
+      140deg,
+      rgba(10, 37, 64, 0.78) 0%,
+      rgba(15, 76, 117, 0.45) 50%,
+      rgba(8, 25, 45, 0.70) 100%
+    ),
+    url('https://cf.bstatic.com/xdata/images/hotel/max1024x768/143110699.jpg?k=5805bba18ea7fac68c8a59d3efec59e19bb489beab395b8bff77ca4dbbcefe4b&o=');
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}

@@ -1,0 +1,410 @@
+<div class="relative min-h-screen w-full bg-background font-sans antialiased lg:grid lg:grid-cols-12 selection:bg-foreground selection:text-background">
+
+  <!-- LEFT: EDITORIAL HERO -->
+  <section class="auth-hero relative hidden min-h-screen flex-col justify-between overflow-hidden p-12 lg:flex lg:col-span-6 xl:col-span-7 text-white select-none">
+
+    <!-- Top: Brand Header -->
+    <div class="relative z-10 flex items-center justify-between">
+      <a routerLink="/" class="group flex items-center gap-3">
+        <div class="flex size-10 items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 font-bold text-lg text-white transition-all duration-300 group-hover:bg-white/20 group-hover:scale-105 shadow-sm">
+          LT
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xl font-bold tracking-tight text-white leading-tight">
+            Let's Travel
+          </span>
+          <span class="text-[10px] uppercase tracking-widest text-white/60 font-medium">
+            Global Expeditions
+          </span>
+        </div>
+      </a>
+
+      <!-- Minimal Badge -->
+      <div class="flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-xs text-white/90 backdrop-blur-md">
+        <span class="size-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        Mediterranean Collection 2026
+      </div>
+    </div>
+
+    <!-- Center: Editorial Content & Location Pin -->
+    <div class="relative z-10 max-w-xl my-auto space-y-6">
+      
+      <!-- Coordinate pin tag for Saïdia, Morocco -->
+      <div class="inline-flex items-center gap-2 rounded-md bg-white/10 px-3 py-1 text-[11px] font-mono tracking-wider text-white/80 backdrop-blur-sm border border-white/10">
+        <ng-icon name="lucideMapPin" class="size-3.5 text-white/70"></ng-icon>
+        SAÏDIA, MOROCCO • 35.0825° N, 2.2272° W
+      </div>
+
+      <h1 class="text-4xl font-extrabold tracking-tight xl:text-6xl text-white leading-[1.08]">
+        The Blue Pearl of the Mediterranean coast.
+      </h1>
+
+      <p class="text-base text-white/75 leading-relaxed font-light xl:text-lg">
+        Golden sand beaches spanning 14 km, crystal turquoise waters, and premier marina retreats along the Moroccan Riviera.
+      </p>
+
+      <!-- Glass Metrics Card -->
+      <div class="grid grid-cols-3 gap-3 rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-md text-white/90">
+        <div class="border-r border-white/10 pr-2">
+          <div class="text-lg font-bold">14 km</div>
+          <div class="text-[11px] text-white/60">Golden Shoreline</div>
+        </div>
+        <div class="border-r border-white/10 pr-2">
+          <div class="text-lg font-bold">300+</div>
+          <div class="text-[11px] text-white/60">Days of Sunshine</div>
+        </div>
+        <div>
+          <div class="text-lg font-bold">850+</div>
+          <div class="text-[11px] text-white/60">Berth Marina</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom: Footer Meta -->
+    <div class="relative z-10 flex items-center justify-between text-xs text-white/50">
+      <span>© 2026 Let's Travel International Ltd.</span>
+      <div class="flex items-center gap-4">
+        <span>Oriental Region, Morocco</span>
+        <span>•</span>
+        <span>Encrypted Gateway</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIGHT: AUTH PORTAL -->
+  <main class="relative flex min-h-screen items-center justify-center p-6 sm:p-10 lg:col-span-6 xl:col-span-5">
+    
+    <div class="w-full max-w-105 space-y-6">
+
+      <!-- Mobile Brand Bar -->
+      <div class="flex flex-col items-center justify-center text-center lg:hidden pb-2">
+        <a routerLink="/" class="flex items-center gap-2.5 mb-2">
+          <div class="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-base shadow-sm">
+            LT
+          </div>
+          <span class="text-xl font-bold tracking-tight">Let's Travel</span>
+        </a>
+      </div>
+
+      <!-- Segmented Mode Switcher -->
+      <div class="relative grid grid-cols-2 rounded-xl bg-muted p-1 border border-border/70 select-none">
+        
+        <!-- Sliding active indicator pill -->
+        <span
+          class="pointer-events-none absolute left-1 top-1 bottom-1 w-[calc(50%-10px)] rounded-lg bg-card shadow-sm border border-border/40 transition-transform duration-300 ease-out"
+          [class.translate-x-0]="isLogin()"
+          [class.translate-x-[calc(100%+8px)]]="!isLogin()"
+          aria-hidden="true"
+        ></span>
+
+        <button
+          type="button"
+          (click)="switchMode(true)"
+          class="relative z-10 rounded-lg py-2 text-xs font-semibold tracking-wide transition-colors duration-200 text-center"
+          [class.text-foreground]="isLogin()"
+          [class.text-muted-foreground]="!isLogin()"
+        >
+          Sign In
+        </button>
+
+        <button
+          type="button"
+          (click)="switchMode(false)"
+          class="relative z-10 rounded-lg py-2 text-xs font-semibold tracking-wide transition-colors duration-200 text-center"
+          [class.text-foreground]="!isLogin()"
+          [class.text-muted-foreground]="isLogin()"
+        >
+          Create Account
+        </button>
+      </div>
+
+      <!-- Header Typography -->
+      <div class="space-y-1 text-left">
+        <h2 class="text-2xl font-bold tracking-tight text-foreground transition-all duration-200">
+          {{ isLogin() ? 'Welcome back' : 'Start your journey' }}
+        </h2>
+        <p class="text-xs text-muted-foreground transition-all duration-200">
+          {{ isLogin() ? 'Enter your details below to access your bookings.' : 'Complete your profile to access private rates and destinations.' }}
+        </p>
+      </div>
+
+      <!-- Error State -->
+      @if (errorMessage()) {
+        <div class="animate-in fade-in slide-in-from-top-1 duration-200">
+          <z-alert zType="destructive" [zDescription]="errorMessage()" />
+        </div>
+      }
+
+      <!-- Form Container Card -->
+      <div class="rounded-2xl border border-border bg-card p-6 shadow-sm overflow-hidden">
+
+        <!-- LOGIN FORM -->
+        @if (isLogin()) {
+          <div class="animate-in fade-in-50 slide-in-from-bottom-2 duration-300 fill-mode-forwards">
+            <form [formGroup]="loginForm" (ngSubmit)="submit()" class="space-y-4" novalidate>
+
+              <!-- Email -->
+              <div z-field>
+                <label z-field-label for="login-email" class="text-xs font-medium text-foreground">
+                  Email
+                </label>
+                <input
+                  z-input
+                  id="login-email"
+                  type="email"
+                  formControlName="email"
+                  placeholder="traveler@example.com"
+                  autocomplete="email"
+                  class="h-10 text-sm"
+                />
+                @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+                  <p z-field-description class="text-[11px] font-medium text-destructive mt-1">
+                    Valid email address required.
+                  </p>
+                }
+              </div>
+
+              <!-- Password -->
+              <div z-field>
+                <div class="flex items-center justify-between mb-1">
+                  <label z-field-label for="login-password" class="text-xs font-medium text-foreground">
+                    Password
+                  </label>
+                  <a href="javascript:void(0)" class="text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors">
+                    Forgot password?
+                  </a>
+                </div>
+
+                <div class="relative">
+                  <input
+                    z-input
+                    id="login-password"
+                    [type]="showPassword() ? 'text' : 'password'"
+                    formControlName="password"
+                    placeholder="••••••••••••"
+                    autocomplete="current-password"
+                    class="h-10 pr-10 text-sm"
+                  />
+                  <button
+                    type="button"
+                    (click)="togglePassword()"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground transition-colors"
+                    [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+                  >
+                    @if (showPassword()) {
+                      <ng-icon name="lucideEyeOff" class="size-4"></ng-icon>
+                    } @else {
+                      <ng-icon name="lucideEye" class="size-4"></ng-icon>
+                    }
+                  </button>
+                </div>
+                @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+                  <p z-field-description class="text-[11px] font-medium text-destructive mt-1">
+                    Password is required.
+                  </p>
+                }
+              </div>
+
+              <!-- Submit -->
+              <div class="pt-2">
+                <button
+                  z-button
+                  type="submit"
+                  class="w-full h-10 font-medium tracking-wide active:scale-[0.98] transition-transform duration-100"
+                  [disabled]="isLoading()"
+                >
+                  @if (isLoading()) {
+                    <span class="inline-flex items-center gap-2">
+                      <ng-icon name="lucideLoader2" class="size-4 animate-spin"></ng-icon>
+                      Authenticating...
+                    </span>
+                  } @else {
+                    Continue with Email
+                  }
+                </button>
+              </div>
+
+            </form>
+          </div>
+        }
+
+        <!-- REGISTER FORM -->
+        @if (!isLogin()) {
+          <div class="animate-in fade-in-50 slide-in-from-bottom-2 duration-300 fill-mode-forwards">
+            <form [formGroup]="registerForm" (ngSubmit)="submit()" class="space-y-3.5" novalidate>
+
+              <!-- Role Selection Cards -->
+              <div class="space-y-1.5">
+                <label class="text-xs font-medium text-foreground">
+                  Account Type
+                </label>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                  @for (role of roles; track role.value) {
+                    <div
+                      role="button"
+                      tabindex="0"
+                      (click)="selectRole(role.value)"
+                      (keydown.enter)="selectRole(role.value)"
+                      class="relative flex flex-col justify-between rounded-xl border p-3 cursor-pointer select-none transition-all duration-150 outline-none hover:border-foreground/40 active:scale-[0.98]"
+                      [class.border-foreground]="registerForm.controls.role.value === role.value"
+                      [class.bg-secondary]="registerForm.controls.role.value === role.value"
+                      [class.border-border]="registerForm.controls.role.value !== role.value"
+                    >
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="text-xs font-semibold text-foreground">
+                          {{ role.label }}
+                        </span>
+                        @if (registerForm.controls.role.value === role.value) {
+                          <span class="size-2 rounded-full bg-foreground"></span>
+                        }
+                      </div>
+                      <p class="text-[10px] text-muted-foreground leading-normal">
+                        {{ role.description }}
+                      </p>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- First & Last Name -->
+              <div class="grid grid-cols-2 gap-2.5">
+                <div z-field>
+                  <label z-field-label for="first-name" class="text-xs font-medium text-foreground">
+                    First name
+                  </label>
+                  <input
+                    z-input
+                    id="first-name"
+                    formControlName="firstName"
+                    placeholder="Elon"
+                    autocomplete="given-name"
+                    class="h-9 text-sm"
+                  />
+                  @if (registerForm.controls.firstName.touched && registerForm.controls.firstName.invalid) {
+                    <p z-field-description class="text-[10px] text-destructive mt-0.5">Min 2 chars</p>
+                  }
+                </div>
+
+                <div z-field>
+                  <label z-field-label for="last-name" class="text-xs font-medium text-foreground">
+                    Last name
+                  </label>
+                  <input
+                    z-input
+                    id="last-name"
+                    formControlName="lastName"
+                    placeholder="Musk"
+                    autocomplete="family-name"
+                    class="h-9 text-sm"
+                  />
+                  @if (registerForm.controls.lastName.touched && registerForm.controls.lastName.invalid) {
+                    <p z-field-description class="text-[10px] text-destructive mt-0.5">Min 2 chars</p>
+                  }
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div z-field>
+                <label z-field-label for="reg-email" class="text-xs font-medium text-foreground">
+                  Email
+                </label>
+                <input
+                  z-input
+                  id="reg-email"
+                  type="email"
+                  formControlName="email"
+                  placeholder="elon@example.com"
+                  autocomplete="email"
+                  class="h-9 text-sm"
+                />
+                @if (registerForm.controls.email.touched && registerForm.controls.email.invalid) {
+                  <p z-field-description class="text-[10px] text-destructive mt-0.5">Valid email required</p>
+                }
+              </div>
+
+              <!-- Password -->
+              <div z-field>
+                <label z-field-label for="reg-password" class="text-xs font-medium text-foreground">
+                  Password
+                </label>
+                <div class="relative">
+                  <input
+                    z-input
+                    id="reg-password"
+                    [type]="showPassword() ? 'text' : 'password'"
+                    formControlName="password"
+                    placeholder="At least 8 characters"
+                    autocomplete="new-password"
+                    class="h-9 pr-9 text-sm"
+                  />
+                  <button
+                    type="button"
+                    (click)="togglePassword()"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                  >
+                    @if (showPassword()) {
+                      <ng-icon name="lucideEyeOff" class="size-3.5"></ng-icon>
+                    } @else {
+                      <ng-icon name="lucideEye" class="size-3.5"></ng-icon>
+                    }
+                  </button>
+                </div>
+                @if (registerForm.controls.password.touched && registerForm.controls.password.invalid) {
+                  <p z-field-description class="text-[10px] text-destructive mt-0.5">Min 8 characters required</p>
+                }
+              </div>
+
+              <!-- Confirm Password -->
+              <div z-field>
+                <label z-field-label for="reg-confirm-password" class="text-xs font-medium text-foreground">
+                  Confirm Password
+                </label>
+                <input
+                  z-input
+                  id="reg-confirm-password"
+                  type="password"
+                  formControlName="confirmPassword"
+                  placeholder="Confirm password"
+                  autocomplete="new-password"
+                  class="h-9 text-sm"
+                />
+                @if (registerForm.controls.confirmPassword.touched && registerForm.controls.confirmPassword.invalid) {
+                  <p z-field-description class="text-[10px] text-destructive mt-0.5">Password confirmation required</p>
+                }
+              </div>
+
+              <!-- Submit -->
+              <div class="pt-2">
+                <button
+                  z-button
+                  type="submit"
+                  class="w-full h-10 font-medium tracking-wide active:scale-[0.98] transition-transform duration-100"
+                  [disabled]="isLoading()"
+                >
+                  @if (isLoading()) {
+                    <span class="inline-flex items-center gap-2">
+                      <ng-icon name="lucideLoader2" class="size-4 animate-spin"></ng-icon>
+                      Creating profile...
+                    </span>
+                  } @else {
+                    Create Account
+                  }
+                </button>
+              </div>
+
+            </form>
+          </div>
+        }
+
+      </div>
+
+      <!-- Legal & Help Notice -->
+      <p class="text-center text-[11px] text-muted-foreground leading-relaxed px-4">
+        Questions? Contact
+        <a href="mailto:amine.yacoubi.med@gmail.com" class="font-medium text-foreground hover:underline">Concierge</a>.
+      </p>
+
+    </div>
+  </main>
+</div>
