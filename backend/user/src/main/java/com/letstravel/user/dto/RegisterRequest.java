@@ -12,8 +12,7 @@ public record RegisterRequest(
 
         @NotBlank @Size(min = 8, max = 30) String password,
 
-        @NotNull RegisterRole role,
+        @NotNull RegisterRole role
 
-        @NotBlank @Size(max = 30) String phone
 ) {
 }

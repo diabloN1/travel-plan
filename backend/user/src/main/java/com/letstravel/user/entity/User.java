@@ -35,9 +35,6 @@ public class User {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Column(length = 30)
-    private String phone;
-
     @Column(name = "profile_url")
     private String profileUrl;
 
