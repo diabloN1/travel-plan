@@ -120,7 +120,6 @@ export class AuthComponent {
       next: (result) => {
         this.isLoading.set(false);
 
-        // TODO: Pass result.accessToken to your authentication state service.
         this.redirectByRole(result.user.role);
       },
       error: (error) => {
