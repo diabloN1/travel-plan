@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.letstravel.common.dto.ErrorResponse;
 
@@ -22,6 +23,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex) {
+        return buildErrorResponse(
+                HttpStatus.NOT_FOUND,
+                "RESOURCE_NOT_FOUND",
+                "The requested endpoint does not exist.",
+                ex.getResourcePath()
+        );
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -100,7 +111,7 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(status, "FEIGN_CLIENT_ERROR", ex.getMessage(),
         null);
     }
-
+    
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAllOtherExceptions(Exception ex) {
         log.error("Unhandled exception occurred: ", ex);
