@@ -61,12 +61,17 @@ export class AuthComponent {
   });
 
   protected readonly registerForm = this.fb.nonNullable.group({
-    firstName: ['', [Validators.required, Validators.minLength(2)]],
-    lastName: ['', [Validators.required, Validators.minLength(2)]],
+    firstName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(25)]],
+
+    lastName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(25)]],
+
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
-    confirmPassword: ['', [Validators.required]],
-    role: ['TRAVELER' as RegisterRole, Validators.required],
+
+    password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(30)]],
+
+    confirmPassword: ['', [Validators.required, Validators.maxLength(30)]],
+
+    role: ['TRAVELER' as RegisterRole, [Validators.required]],
   });
 
   readonly roles = [
