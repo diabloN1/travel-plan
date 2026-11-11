@@ -14,7 +14,7 @@ import com.letstravel.user.dto.RegisterRequest;
 import com.letstravel.user.service.AuthService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
