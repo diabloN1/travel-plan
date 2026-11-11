@@ -1,4 +1,4 @@
-package com.letstravel.user.service;
+package com.letstravel.user.service.impl;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +13,7 @@ import com.letstravel.common.exception.ConflictException;
 import com.letstravel.common.exception.UnauthorizedException;
 import com.letstravel.user.repository.UserRepository;
 import com.letstravel.user.security.JwtService;
+import com.letstravel.user.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 
