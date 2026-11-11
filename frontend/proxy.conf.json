@@ -3,5 +3,10 @@
     "target": "http://localhost:8081",
     "secure": false,
     "changeOrigin": true
+  },
+  "/api/destinations": {
+    "target": "http://localhost:8082",
+    "secure": false,
+    "changeOrigin": true
   }
 }
