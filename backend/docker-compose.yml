@@ -9,6 +9,8 @@ services:
         APP_PORT: 8081
     env_file:
       - ../.env
+    ports:
+      - "8081:8081"
     networks:
       - travel-internal-network
 
@@ -22,6 +24,8 @@ services:
         APP_PORT: 8082
     env_file:
       - ../.env
+    ports:
+      - "8082:8082"
     networks:
       - travel-internal-network
 
