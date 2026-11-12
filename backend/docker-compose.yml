@@ -7,6 +7,10 @@ services:
       args:
         SERVICE: user
         APP_PORT: 8081
+    env_file:
+      - ../.env
+    networks:
+      - travel-internal-network
 
   travel:
     image: letstravel/travel
@@ -16,7 +20,11 @@ services:
       args:
         SERVICE: travel
         APP_PORT: 8082
+    env_file:
+      - ../.env
+    networks:
+      - travel-internal-network
 
-volumes:
-  caddy_data:
-  caddy_config:
+networks:
+  travel-internal-network:
+    external: true
