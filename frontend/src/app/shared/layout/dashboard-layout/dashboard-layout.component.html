@@ -1,0 +1,156 @@
+<z-sidebar-provider zDefaultOpen="true" class="min-h-screen bg-background">
+  <z-sidebar zCollapsible="icon" class="border-r">
+    <!-- SIDEBAR HEADER -->
+    <div z-sidebar-header>
+      <ul z-sidebar-menu>
+        <li z-sidebar-menu-item>
+          <div class="flex items-center gap-3 px-2 py-2">
+            <div
+              class="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-lg font-bold text-primary-foreground"
+            >
+              LT
+            </div>
+
+            <div class="grid min-w-0 flex-1 text-left text-sm leading-tight">
+              <span class="truncate font-semibold"> Let's Travel </span>
+
+              <span class="truncate text-xs text-muted-foreground">
+                {{ appDescription() }}
+              </span>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- SIDEBAR CONTENT -->
+    <z-sidebar-content>
+      @for (group of navigation(); track group.title) {
+        <div z-sidebar-group>
+          <div z-sidebar-group-label>
+            {{ group.title }}
+          </div>
+
+          <div z-sidebar-group-content>
+            <ul z-sidebar-menu>
+              @for (item of group.items; track item.url) {
+                <li z-sidebar-menu-item>
+                  <a
+                    z-sidebar-menu-button
+                    [routerLink]="item.url"
+                    routerLinkActive
+                    #activeRoute="routerLinkActive"
+                    [routerLinkActiveOptions]="{
+                      exact: item.exact ?? true,
+                    }"
+                    [zActive]="activeRoute.isActive"
+                    [zTooltip]="item.title"
+                  >
+                    <ng-icon [name]="item.icon" />
+
+                    <span>{{ item.title }}</span>
+                  </a>
+
+                  @if (item.badge !== undefined) {
+                    <span
+                      z-sidebar-menu-badge
+                      class="rounded-md bg-primary/10 px-2 text-xs font-semibold text-primary"
+                    >
+                      {{ item.badge }}
+                    </span>
+                  }
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      }
+    </z-sidebar-content>
+
+    <!-- SIDEBAR FOOTER -->
+    <div z-sidebar-footer>
+      <ul z-sidebar-menu>
+        <li z-sidebar-menu-item>
+          <div class="flex items-center gap-3 rounded-lg p-2">
+            <div
+              class="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary"
+            >
+              {{ userInitials() }}
+            </div>
+
+            <div class="grid min-w-0 flex-1 text-left text-sm leading-tight">
+              <span class="truncate font-semibold">
+                {{ userName() }}
+              </span>
+
+              <span class="truncate text-xs text-muted-foreground">
+                {{ userRole() }}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              z-sidebar-menu-button
+              zTooltip="Log out"
+              class="size-8"
+              aria-label="Log out"
+              (click)="logout.emit()"
+            >
+              <ng-icon name="lucideLogOut" />
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- COLLAPSE RAIL -->
+    <button z-sidebar-rail aria-label="Toggle sidebar"></button>
+  </z-sidebar>
+
+  <!-- MAIN CONTENT -->
+  <main z-sidebar-inset class="min-h-screen min-w-0 bg-background">
+    <!-- TOP HEADER -->
+    <header
+      class="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-border bg-background/95 px-5 backdrop-blur sm:px-8"
+    >
+      <button z-sidebar-trigger class="-ml-2" aria-label="Toggle sidebar"></button>
+
+      <div class="h-5 w-px bg-border"></div>
+
+      <div class="min-w-0 flex-1">
+        <h1 class="truncate text-lg font-bold tracking-tight">
+          {{ pageTitle() }}
+        </h1>
+
+        @if (pageDescription()) {
+          <p class="hidden truncate text-xs text-muted-foreground sm:block">
+            {{ pageDescription() }}
+          </p>
+        }
+      </div>
+
+      <div class="hidden items-center gap-3 sm:flex">
+        <div class="text-right">
+          <p class="text-sm font-semibold">
+            {{ userName() }}
+          </p>
+
+          <p class="text-xs text-muted-foreground">
+            {{ userRole() }}
+          </p>
+        </div>
+
+        <div
+          class="flex size-9 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary"
+        >
+          {{ userInitials() }}
+        </div>
+      </div>
+    </header>
+
+    <!-- PROJECTED DASHBOARD CONTENT -->
+    <div class="mx-auto w-full max-w-[1600px] p-5 sm:p-8 lg:p-10 bg-background">
+      <ng-content />
+    </div>
+  </main>
+</z-sidebar-provider>
