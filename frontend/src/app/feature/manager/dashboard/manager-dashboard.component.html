@@ -1,0 +1,67 @@
+<app-dashboard-layout
+  appDescription="Manager Portal"
+  pageTitle="Overview"
+  pageDescription="Your manager workspace"
+  userName="Travel Manager"
+  userRole="Manager"
+  userInitials="M"
+  [navigation]="navigation"
+  (logout)="logout()"
+>
+  <div class="mx-auto w-full max-w-7xl space-y-8 p-4 sm:p-6 lg:p-8">
+    <section class="space-y-2">
+      <p class="text-sm font-medium text-primary">Manager workspace</p>
+
+      <h1 class="text-3xl font-bold tracking-tight text-foreground">Welcome back!</h1>
+
+      <p class="text-sm text-muted-foreground">
+        Manage your travel destinations and activities from here.
+      </p>
+    </section>
+
+    <section class="grid gap-5 md:grid-cols-2">
+      <article class="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div
+          class="mb-5 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-2xl"
+        >
+          📍
+        </div>
+
+        <h2 class="text-lg font-semibold text-foreground">My destinations</h2>
+
+        <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+          Create and manage the destinations you offer to travelers. Choose locations using Google
+          Maps.
+        </p>
+
+        <button z-button type="button" class="mt-6" routerLink="/manager/destinations">
+          Manage destinations →
+        </button>
+      </article>
+
+      <article class="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div
+          class="mb-5 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-2xl"
+        >
+          🧭
+        </div>
+
+        <h2 class="text-lg font-semibold text-foreground">Activities</h2>
+
+        <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+          Manage the activities associated with your destinations.
+        </p>
+
+        <button
+          z-button
+          zType="outline"
+          type="button"
+          class="mt-6"
+          routerLink="/manager/activities"
+        >
+          Manage activities →
+        </button>
+      </article>
+    </section>
+  </div>
+</app-dashboard-layout>
