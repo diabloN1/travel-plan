@@ -1,0 +1,22 @@
+services:
+  user:
+    image: letstravel/user
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: user
+        APP_PORT: 8081
+
+  travel:
+    image: letstravel/travel
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: travel
+        APP_PORT: 8082
+
+volumes:
+  caddy_data:
+  caddy_config:
