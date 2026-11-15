@@ -1,7 +1,6 @@
 export type DestinationType =
   | 'ACTIVITIES'
   | 'ACCOMODATION'
-  | 'BOTH'
   | 'OTHER';
 
 export interface DestinationRequest {
