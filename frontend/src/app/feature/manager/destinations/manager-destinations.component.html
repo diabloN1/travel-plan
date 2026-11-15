@@ -1,0 +1,188 @@
+<app-dashboard-layout
+  appDescription="Manager Portal"
+  pageTitle="Destination Management"
+  pageDescription="Manage your travel destinations"
+  userName="Travel Manager"
+  userRole="Manager"
+  userInitials="M"
+  [navigation]="navigation"
+  (logout)="logout()"
+>
+  <div class="mx-auto w-full max-w-7xl space-y-8 p-4 sm:p-6 lg:p-8">
+    <!-- INTRODUCTION -->
+    <section class="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+      <div class="space-y-2">
+        <div class="flex items-center gap-2 text-sm font-medium text-primary">
+          <span class="size-2 rounded-full bg-primary"></span>
+          Manager workspace
+        </div>
+
+        <h1 class="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          Your destinations
+        </h1>
+
+        <p class="max-w-xl text-sm leading-relaxed text-muted-foreground">
+          Create, organize, and manage the destinations you offer to travelers.
+        </p>
+      </div>
+
+      <button z-button type="button" class="shrink-0" (click)="openCreateForm()">
+        <ng-icon name="lucidePlus" class="mr-2 size-4"></ng-icon>
+        Add destination
+      </button>
+    </section>
+
+    <!-- STATISTICS -->
+    <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <article class="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+          <div class="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-xl">
+            <ng-icon name="lucideMapPin" class="size-5 text-primary"></ng-icon>
+          </div>
+          <span class="text-xs text-muted-foreground">All destinations</span>
+        </div>
+
+        <div class="mt-5">
+          <p class="text-sm text-muted-foreground">Total destinations</p>
+          <p class="mt-1 text-3xl font-bold text-foreground">
+            {{ totalElements() }}
+          </p>
+        </div>
+      </article>
+    </section>
+
+    <!-- DESTINATION CATALOG -->
+    <section class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      <div
+        class="flex flex-col justify-between gap-4 border-b border-border p-5 sm:p-6 lg:flex-row lg:items-center"
+      >
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">Destination catalog</h2>
+
+          <p class="mt-1 text-sm text-muted-foreground">
+            Manage all the destinations in your travel catalog.
+          </p>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <div class="min-w-0 sm:w-64">
+            <input
+              z-input
+              type="search"
+              placeholder="Search destinations..."
+              class="w-full"
+              [value]="searchQuery()"
+              (input)="setSearch($any($event.target).value)"
+            />
+          </div>
+
+          <select
+            class="h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring"
+            [value]="selectedType()"
+            (change)="setType($any($event.target).value)"
+          >
+            <option value="ALL">All categories</option>
+            <option value="ACTIVITIES">Activities</option>
+            <option value="ACCOMODATION">Accommodation</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- LIST -->
+      <app-destination-list
+        [destinations]="filteredDestinations()"
+        [loading]="loading()"
+        [searchQuery]="searchQuery()"
+        [selectedType]="selectedType()"
+        (create)="openCreateForm()"
+        (edit)="openEditForm($event)"
+        (delete)="deleteDestination($event)"
+      />
+
+      <!-- PAGINATION -->
+      @if (!loading() && totalPages() > 1) {
+        <div
+          class="flex flex-col justify-between gap-4 border-t border-border px-5 py-4 sm:flex-row sm:items-center sm:px-6"
+        >
+          <p class="text-sm text-muted-foreground">
+            Page {{ currentPage() + 1 }} of {{ totalPages() }}
+            <span class="mx-1">·</span>
+            {{ totalElements() }} destinations
+          </p>
+
+          <div class="flex items-center gap-2">
+            <button
+              z-button
+              zType="outline"
+              type="button"
+              [zDisabled]="currentPage() === 0"
+              (click)="previousPage()"
+            >
+              <ng-icon name="lucideChevronLeft" class="mr-2 size-4"></ng-icon>
+              Previous
+            </button>
+
+            <button
+              z-button
+              zType="outline"
+              type="button"
+              [zDisabled]="currentPage() >= totalPages() - 1"
+              (click)="nextPage()"
+            >
+              Next
+              <ng-icon name="lucideChevronRight" class="ml-2 size-4"></ng-icon>
+            </button>
+          </div>
+        </div>
+      }
+    </section>
+  </div>
+
+  <!-- CREATE / EDIT MODAL -->
+  @if (showForm()) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-background/80 p-4 backdrop-blur-sm"
+      (click)="closeForm()"
+    >
+      <div
+        class="my-auto w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="destination-form-title"
+        (click)="$event.stopPropagation()"
+      >
+        <!-- HEADER -->
+        <div class="flex items-center justify-between border-b border-border p-5 sm:p-6">
+          <div>
+            <h2 id="destination-form-title" class="text-xl font-semibold text-foreground">
+              {{ editingDestination() ? 'Edit destination' : 'Create destination' }}
+            </h2>
+
+            <p class="mt-1 text-sm text-muted-foreground">
+              Provide the information about your destination.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            aria-label="Close dialog"
+            class="flex size-9 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+            (click)="closeForm()"
+          >
+            <ng-icon name="lucideX" class="size-4"></ng-icon>
+          </button>
+        </div>
+
+        <!-- FORM COMPONENT -->
+        <app-destination-form
+          [destination]="editingDestination()"
+          [saving]="saving()"
+          (save)="saveDestination($event)"
+          (cancel)="closeForm()"
+        />
+      </div>
+    </div>
+  }
+</app-dashboard-layout>
