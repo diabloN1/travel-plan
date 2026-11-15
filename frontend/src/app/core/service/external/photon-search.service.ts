@@ -1,4 +1,7 @@
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+
+import { map, Observable } from 'rxjs';
 
 import { MapViewport, PhotonFeature, PhotonResponse } from '@/core/model/map-location.model';
 
@@ -6,34 +9,34 @@ import { MapViewport, PhotonFeature, PhotonResponse } from '@/core/model/map-loc
   providedIn: 'root',
 })
 export class PhotonSearchService {
+  private readonly http = inject(HttpClient);
+
   private readonly API_URL = 'https://photon.komoot.io/api/';
   private readonly RESULT_LIMIT = 8;
 
-  async search(
-    query: string,
-    signal: AbortSignal,
-    viewport?: MapViewport | null,
-  ): Promise<PhotonFeature[]> {
-    const params = new URLSearchParams({
-      q: query,
-      limit: String(this.RESULT_LIMIT),
-      lang: 'en',
-    });
+  search(query: string, viewport?: MapViewport | null): Observable<PhotonFeature[]> {
+    let params = new HttpParams().set('q', query).set('limit', this.RESULT_LIMIT).set('lang', 'en');
 
     if (viewport) {
-      params.set('lat', String(viewport.latitude));
-      params.set('lon', String(viewport.longitude));
-      params.set('zoom', String(viewport.zoom));
+      params = params
+        .set('lat', viewport.latitude)
+        .set('lon', viewport.longitude)
+        .set('zoom', viewport.zoom);
     }
 
-    const response = await fetch(`${this.API_URL}?${params.toString()}`, { signal });
+    return this.http.get<PhotonResponse>(this.API_URL, { params }).pipe(
+      map((data) =>
+        (data.features ?? []).filter((feature) => {
+          const coordinates = feature.geometry?.coordinates;
 
-    if (!response.ok) {
-      throw new Error(`Photon returned HTTP ${response.status}`);
-    }
-
-    const data = (await response.json()) as PhotonResponse;
-
-    return data.features ?? [];
+          return (
+            Array.isArray(coordinates) &&
+            coordinates.length === 2 &&
+            Number.isFinite(coordinates[0]) &&
+            Number.isFinite(coordinates[1])
+          );
+        }),
+      ),
+    );
   }
 }
