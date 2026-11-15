@@ -1,0 +1,104 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="space-y-5 p-5 sm:p-6">
+
+  <!-- NAME -->
+  <div>
+    <label class="mb-2 block text-sm font-medium text-foreground"> Destination name * </label>
+
+    <input
+      z-input
+      formControlName="name"
+      placeholder="e.g. Marrakech Desert Experience"
+      class="w-full"
+    />
+
+    @if (form.controls.name.touched && form.controls.name.invalid) {
+      <p class="mt-1.5 text-xs text-destructive">
+        A destination name is required (maximum 150 characters).
+      </p>
+    }
+  </div>
+
+  <!-- LOCATION -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <label class="mb-2 block text-sm font-medium text-foreground"> Country </label>
+
+      <input z-input formControlName="country" placeholder="Morocco" class="w-full" />
+    </div>
+
+    <div>
+      <label class="mb-2 block text-sm font-medium text-foreground"> City </label>
+
+      <input z-input formControlName="city" placeholder="Marrakech" class="w-full" />
+    </div>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <div>
+    <label class="mb-2 block text-sm font-medium text-foreground"> Description </label>
+
+    <textarea
+      formControlName="description"
+      rows="4"
+      placeholder="Describe this destination..."
+      class="w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+    ></textarea>
+  </div>
+
+  <!-- CATEGORY -->
+  <div>
+    <label class="mb-2 block text-sm font-medium text-foreground"> Destination category * </label>
+
+    <select
+      formControlName="type"
+      class="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
+      <option value="ACTIVITIES">Activities</option>
+      <option value="ACCOMODATION">Accommodation</option>
+      <option value="BOTH">Activities & Accommodation</option>
+      <option value="OTHER">Other</option>
+    </select>
+  </div>
+
+  <!-- COORDINATES -->
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <label class="mb-2 block text-sm font-medium text-foreground"> Latitude </label>
+
+      <input
+        z-input
+        type="number"
+        step="any"
+        formControlName="latitude"
+        placeholder="31.6295"
+        class="w-full"
+      />
+    </div>
+
+    <div>
+      <label class="mb-2 block text-sm font-medium text-foreground"> Longitude </label>
+
+      <input
+        z-input
+        type="number"
+        step="any"
+        formControlName="longitude"
+        placeholder="-7.9811"
+        class="w-full"
+      />
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="flex flex-col-reverse justify-end gap-3 border-t border-border pt-5 sm:flex-row">
+    <button z-button zType="outline" type="button" (click)="cancel.emit()">Cancel</button>
+
+    <button z-button type="submit" [disabled]="saving()">
+      @if (saving()) {
+        Saving...
+      } @else {
+        {{ destination() ? 'Save changes' : 'Create destination' }}
+      }
+    </button>
+  </div>
+</form>
