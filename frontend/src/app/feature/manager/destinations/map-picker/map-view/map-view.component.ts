@@ -13,6 +13,7 @@ import {
 
 import { MapPosition, MapViewport } from '@/core/model/map-location.model';
 import { GoogleMapsLoaderService } from '@/core/service/external/google-maps-loader.service';
+import { ZardSonnerService } from '@/shared/components/sonner';
 
 @Component({
   selector: 'app-map-view',
@@ -25,6 +26,7 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
   private mapElement!: ElementRef<HTMLDivElement>;
 
   private readonly mapsLoader = inject(GoogleMapsLoaderService);
+  private readonly sonner = inject(ZardSonnerService);
 
   readonly latitude = input<number | null>(null);
   readonly longitude = input<number | null>(null);
@@ -58,6 +60,7 @@ export class MapViewComponent implements AfterViewInit, OnDestroy {
     try {
       await this.initializeMap();
     } catch (error) {
+      this.sonner.error('Unable to initialize Google Maps, please try again later!');
       console.error('Unable to initialize Google Maps:', error);
     }
   }
