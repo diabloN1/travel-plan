@@ -1,0 +1,44 @@
+@if (loading()) {
+  <div class="flex min-h-72 flex-col items-center justify-center gap-4">
+    <div class="size-8 animate-spin rounded-full border-4 border-muted border-t-primary"></div>
+    <p class="text-sm text-muted-foreground">Loading destinations...</p>
+  </div>
+} @else {
+  @if (destinations().length > 0) {
+    <div class="grid grid-cols-1 gap-5 p-5 sm:p-6 md:grid-cols-2 xl:grid-cols-3">
+      @for (destination of destinations(); track destination.id) {
+        <app-destination-card
+          [destination]="destination"
+          (edit)="edit.emit($event)"
+          (delete)="delete.emit($event)"
+        />
+      }
+    </div>
+  } @else {
+    <div class="flex min-h-80 flex-col items-center justify-center px-6 py-12 text-center">
+      <div class="flex size-16 items-center justify-center rounded-2xl bg-muted">
+        <ng-icon name="lucideGlobe" size="30"></ng-icon>
+      </div>
+
+      <h3 class="mt-5 text-lg font-semibold text-foreground">No destinations found</h3>
+
+      <p class="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
+        @if (searchQuery() || selectedType() !== 'ALL') {
+          No destinations match your search or selected category. Try adjusting your filters.
+        } @else {
+          Your destination catalog is empty. Start by adding your first destination.
+        }
+      </p>
+
+      @if (!searchQuery() && selectedType() === 'ALL') {
+        <button
+          type="button"
+          class="mt-5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+          (click)="create.emit()"
+        >
+          + Add your first destination
+        </button>
+      }
+    </div>
+  }
+}
