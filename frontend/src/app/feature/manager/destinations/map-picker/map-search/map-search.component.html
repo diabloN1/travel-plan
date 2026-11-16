@@ -1,0 +1,84 @@
+<div class="relative w-full mb-5">
+  <!-- Search input -->
+  <input
+    z-input
+    type="text"
+    role="combobox"
+    aria-autocomplete="list"
+    aria-controls="photon-search-results"
+    [attr.aria-expanded]="
+      searchLoading() || searchResults().length > 0 || searchError() || searchCompleted()
+    "
+    [value]="searchQuery()"
+    (input)="onSearchInput($event)"
+    (keydown.escape)="closeSearchResults()"
+    placeholder="Search for a destination..."
+    autocomplete="off"
+    spellcheck="false"
+    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm text-foreground shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+  />
+
+  <!-- Search results -->
+  @if (searchLoading() || searchResults().length > 0 || searchError() || searchCompleted()) {
+    <div
+      id="photon-search-results"
+      role="listbox"
+      class="absolute z-50 mt-1 max-h-72 w-full overflow-y-auto rounded-md border border-border bg-popover py-1 text-popover-foreground shadow-md"
+    >
+      @for (result of searchResults(); track $index) {
+        <button
+          type="button"
+          role="option"
+          [attr.aria-selected]="false"
+          (click)="selectSearchResult(result)"
+          class="flex w-full items-start gap-3 px-3 py-2.5 text-left transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:outline-none"
+        >
+          <ng-icon name="lucideMapPin" class="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+
+          <span class="min-w-0 flex-1">
+            <span class="block truncate text-sm font-medium">
+              {{ getResultTitle(result) }}
+            </span>
+
+            @if (getResultSubtitle(result); as subtitle) {
+              <span class="mt-0.5 block truncate text-xs text-muted-foreground">
+                {{ subtitle }}
+              </span>
+            }
+          </span>
+
+          @if (getResultCategory(result); as category) {
+            <span
+              class="shrink-0 rounded-md bg-muted px-2 py-1 text-[10px] font-medium capitalize text-muted-foreground"
+            >
+              {{ category }}
+            </span>
+          }
+        </button>
+      }
+
+      @if (searchLoading() && searchResults().length === 0) {
+        <p class="px-3 py-3 text-sm text-muted-foreground">Searching places...</p>
+      }
+
+      @if (searchError()) {
+        <p class="px-3 py-3 text-sm text-destructive">
+          Search is temporarily unavailable. Please try again.
+        </p>
+      }
+
+      @if (searchCompleted() && searchResults().length === 0 && !searchError()) {
+        <p class="px-3 py-3 text-sm text-muted-foreground">No matching places found.</p>
+      }
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (searchLoading()) {
+    <div class="absolute right-3 top-1/2 -translate-y-1/2" aria-label="Searching">
+      <div
+        class="size-4 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-primary"
+      ></div>
+    </div>
+  }
+</div>
