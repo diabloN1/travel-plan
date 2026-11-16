@@ -65,7 +65,7 @@ export class AuthService {
     this.clearSession();
 
     if (redirect) {
-      this.router.navigateByUrl('/auth/login');
+      this.router.navigateByUrl('/auth');
     }
   }
 
