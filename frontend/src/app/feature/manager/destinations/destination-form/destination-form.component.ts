@@ -19,8 +19,8 @@ import { ZardButtonComponent } from '@/shared/components/button/button.component
 
 import {
   MapPickerComponent,
-  SelectedMapLocation,
 } from '../map-picker/map-picker.component';
+import { SelectedMapLocation } from '@/core/model/map-location.model';
 
 @Component({
   selector: 'app-destination-form',
@@ -80,7 +80,7 @@ export class DestinationFormComponent {
       longitude: location.longitude,
       ...(location.city ? { city: location.city } : {}),
       ...(location.country ? { country: location.country } : {}),
-      ...(location.name && !currentName ? { name: location.name } : {}),
+      ...(location.name ? { name: location.name } : {}),
     });
   }
 

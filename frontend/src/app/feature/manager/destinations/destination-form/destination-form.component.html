@@ -1,5 +1,21 @@
 <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-5 p-5 sm:p-6">
+  <!-- GOOGLE MAP -->
+  <div class="space-y-3">
+    <div>
+      <h3 class="text-sm font-semibold text-foreground">Destination location</h3>
 
+      <p class="mt-1 text-xs text-muted-foreground">
+        Search for a place or select its location directly on the map.
+      </p>
+    </div>
+
+    <app-map-picker
+      [latitude]="form.controls.latitude.value"
+      [longitude]="form.controls.longitude.value"
+      (locationSelected)="onLocationSelected($event)"
+    />
+  </div>
+  
   <!-- NAME -->
   <div>
     <label class="mb-2 block text-sm font-medium text-foreground"> Destination name * </label>
@@ -55,7 +71,6 @@
     >
       <option value="ACTIVITIES">Activities</option>
       <option value="ACCOMODATION">Accommodation</option>
-      <option value="BOTH">Activities & Accommodation</option>
       <option value="OTHER">Other</option>
     </select>
   </div>
