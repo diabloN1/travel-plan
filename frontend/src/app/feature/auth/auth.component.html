@@ -29,7 +29,6 @@
     <!-- Center: Editorial Content & Location Pin -->
     <div class="relative z-10 max-w-xl my-auto space-y-6">
       
-      <!-- Coordinate pin tag for Saïdia, Morocco -->
       <div class="inline-flex items-center gap-2 rounded-md bg-white/10 px-3 py-1 text-[11px] font-mono tracking-wider text-white/80 backdrop-blur-sm border border-white/10">
         <ng-icon name="lucideMapPin" class="size-3.5 text-white/70"></ng-icon>
         SAÏDIA, MOROCCO • 35.0825° N, 2.2272° W
@@ -282,7 +281,7 @@
                     class="h-9 text-sm"
                   />
                   @if (registerForm.controls.firstName.touched && registerForm.controls.firstName.invalid) {
-                    <p z-field-description class="text-[10px] text-destructive mt-0.5">Min 2 chars</p>
+                    <p z-field-description class="text-[10px] text-destructive mt-0.5">Must be between 3 chars and 25</p>
                   }
                 </div>
 
@@ -299,7 +298,7 @@
                     class="h-9 text-sm"
                   />
                   @if (registerForm.controls.lastName.touched && registerForm.controls.lastName.invalid) {
-                    <p z-field-description class="text-[10px] text-destructive mt-0.5">Min 2 chars</p>
+                    <p z-field-description class="text-[10px] text-destructive mt-0.5">Must be between 3 chars and 25</p>
                   }
                 </div>
               </div>
@@ -351,7 +350,7 @@
                   </button>
                 </div>
                 @if (registerForm.controls.password.touched && registerForm.controls.password.invalid) {
-                  <p z-field-description class="text-[10px] text-destructive mt-0.5">Min 8 characters required</p>
+                  <p z-field-description class="text-[10px] text-destructive mt-0.5">Must be between 8 chars and 30</p>
                 }
               </div>
 
@@ -399,7 +398,6 @@
 
       </div>
 
-      <!-- Legal & Help Notice -->
       <p class="text-center text-[11px] text-muted-foreground leading-relaxed px-4">
         Questions? Contact
         <a href="mailto:amine.yacoubi.med@gmail.com" class="font-medium text-foreground hover:underline">Concierge</a>.
