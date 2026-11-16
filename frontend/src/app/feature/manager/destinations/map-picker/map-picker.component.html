@@ -1,0 +1,12 @@
+<div class="space-y-3">
+  <app-map-search
+    [searchCenter]="searchCenter()"
+    (resultSelected)="onSearchResultSelected($event)"
+  />
+
+  <app-map-view
+    [latitude]="mapLatitude()"
+    [longitude]="mapLongitude()"
+    (positionSelected)="onMapPositionSelected($event)"
+    (mapCenterChanged)="searchCenter.set($event)"
+  />
