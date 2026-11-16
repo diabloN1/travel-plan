@@ -3,7 +3,12 @@ import { Injectable, inject } from '@angular/core';
 
 import { map, Observable } from 'rxjs';
 
-import { MapViewport, PhotonFeature, PhotonResponse } from '@/core/model/map-location.model';
+import {
+  MapViewport,
+  PhotonFeature,
+  PhotonResponse,
+  SelectedMapLocation,
+} from '@/core/model/map-location.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +16,12 @@ import { MapViewport, PhotonFeature, PhotonResponse } from '@/core/model/map-loc
 export class PhotonSearchService {
   private readonly http = inject(HttpClient);
 
-  private readonly API_URL = 'https://photon.komoot.io/api/';
+  private readonly SEARCH_API_URL = 'https://photon.komoot.io/api/';
+  private readonly REVERSE_API_URL = 'https://photon.komoot.io/reverse';
+
   private readonly RESULT_LIMIT = 8;
 
+  // Forward geocoding: search for places using text.
   search(query: string, viewport?: MapViewport | null): Observable<PhotonFeature[]> {
     let params = new HttpParams().set('q', query).set('limit', this.RESULT_LIMIT).set('lang', 'en');
 
@@ -24,7 +32,7 @@ export class PhotonSearchService {
         .set('zoom', viewport.zoom);
     }
 
-    return this.http.get<PhotonResponse>(this.API_URL, { params }).pipe(
+    return this.http.get<PhotonResponse>(this.SEARCH_API_URL, { params }).pipe(
       map((data) =>
         (data.features ?? []).filter((feature) => {
           const coordinates = feature.geometry?.coordinates;
@@ -37,6 +45,51 @@ export class PhotonSearchService {
           );
         }),
       ),
+    );
+  }
+
+  // Reverse geocoding: get a place description from coordinates.
+  reverseGeocode(latitude: number, longitude: number): Observable<SelectedMapLocation> {
+    const params = new HttpParams()
+      .set('lat', latitude)
+      .set('lon', longitude)
+      .set('limit', 1)
+      .set('lang', 'en');
+
+    return this.http.get<PhotonResponse>(this.REVERSE_API_URL, { params }).pipe(
+      map((data) => {
+        const feature = data.features?.[0];
+
+        if (!feature) {
+          return {
+            latitude,
+            longitude,
+            name: null,
+            city: null,
+            country: null,
+          };
+        }
+
+        const properties = feature.properties;
+
+        const streetAddress = [properties.housenumber, properties.street].filter(Boolean).join(' ');
+
+        return {
+          latitude,
+          longitude,
+
+          name: (properties.name ?? streetAddress) || null,
+
+          city:
+            properties.city ??
+            properties.town ??
+            properties.village ??
+            properties.municipality ??
+            null,
+
+          country: properties.country ?? null,
+        };
+      }),
     );
   }
 }
