@@ -1,10 +1,4 @@
-import {
-  Component,
-  effect,
-  inject,
-  input,
-  output,
-} from '@angular/core';
+import { Component, effect, inject, input, output } from '@angular/core';
 
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -17,10 +11,14 @@ import {
 import { ZardInputComponent } from '@/shared/components/input/input.component';
 import { ZardButtonComponent } from '@/shared/components/button/button.component';
 
-import {
-  MapPickerComponent,
-} from '../map-picker/map-picker.component';
+import { MapPickerComponent } from '../map-picker/map-picker.component';
 import { SelectedMapLocation } from '@/core/model/map-location.model';
+import { ZardTextareaComponent } from '@/shared/components/textarea';
+import {
+  ZardSelectComponent,
+  ZardSelectItemComponent,
+  ZardSelectGroupComponent,
+} from '@/shared/components/select';
 
 @Component({
   selector: 'app-destination-form',
@@ -30,6 +28,11 @@ import { SelectedMapLocation } from '@/core/model/map-location.model';
     ZardInputComponent,
     ZardButtonComponent,
     MapPickerComponent,
+    ZardInputComponent,
+    ZardTextareaComponent,
+    ZardSelectComponent,
+    ZardSelectItemComponent,
+    ZardSelectGroupComponent,
   ],
   templateUrl: './destination-form.component.html',
 })
@@ -91,7 +94,6 @@ export class DestinationFormComponent {
     }
 
     const values = this.form.getRawValue();
-
 
     if (values.name == null || values.type == null) {
       this.form.markAllAsTouched();

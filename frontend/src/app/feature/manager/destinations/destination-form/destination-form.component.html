@@ -15,7 +15,7 @@
       (locationSelected)="onLocationSelected($event)"
     />
   </div>
-  
+
   <!-- NAME -->
   <div>
     <label class="mb-2 block text-sm font-medium text-foreground"> Destination name * </label>
@@ -54,6 +54,7 @@
     <label class="mb-2 block text-sm font-medium text-foreground"> Description </label>
 
     <textarea
+      z-textarea
       formControlName="description"
       rows="4"
       placeholder="Describe this destination..."
@@ -63,16 +64,27 @@
 
   <!-- CATEGORY -->
   <div>
-    <label class="mb-2 block text-sm font-medium text-foreground"> Destination category * </label>
+    <label for="destination-type" class="mb-2 block text-sm font-medium text-foreground">
+      Destination category *
+    </label>
 
-    <select
+    <z-select
+      id="destination-type"
       formControlName="type"
-      class="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      zPlaceholder="Select a category"
+      class="w-full"
+      [zInvalid]="form.controls.type.touched && form.controls.type.invalid"
     >
-      <option value="ACTIVITIES">Activities</option>
-      <option value="ACCOMODATION">Accommodation</option>
-      <option value="OTHER">Other</option>
-    </select>
+      <z-select-group>
+        <z-select-item zValue="ACTIVITIES"> Activities </z-select-item>
+        <z-select-item zValue="ACCOMODATION"> Accommodation </z-select-item>
+        <z-select-item zValue="OTHER"> Other </z-select-item>
+      </z-select-group>
+    </z-select>
+
+    @if (form.controls.type.touched && form.controls.type.invalid) {
+      <p class="mt-1.5 text-xs text-destructive">Please select a destination category.</p>
+    }
   </div>
 
   <!-- COORDINATES -->
