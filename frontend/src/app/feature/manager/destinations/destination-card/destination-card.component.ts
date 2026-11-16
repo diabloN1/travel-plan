@@ -30,11 +30,6 @@ export class DestinationCardComponent {
       icon: 'lucideHotel',
       clazz: 'bg-amber-500/10 text-amber-600',
     },
-    BOTH: {
-      label: 'Activities & Stay',
-      icon: 'lucidePalmtree',
-      clazz: 'bg-emerald-500/10 text-emerald-600',
-    },
     OTHER: {
       label: 'Other',
       icon: 'lucideGlobe',
