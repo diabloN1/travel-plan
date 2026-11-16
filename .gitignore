@@ -2,3 +2,4 @@ Infra
 .vscode
 .env
 todo
+**/google-maps.config.ts
