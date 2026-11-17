@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { DashboardLayoutComponent } from '@/shared/layout/dashboard-layout/dashboard-layout.component';
 import { ZardButtonComponent } from '@/shared/components/button/button.component';
-import { AuthService } from '@/core/service/auth.service';
+import { AuthService } from '@/core/service/internal/auth.service';
 import { MANAGER_NAVIGATION } from '../manager.navigation';
 
 import { NgIcon, provideIcons } from '@ng-icons/core';

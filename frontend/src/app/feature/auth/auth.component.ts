@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Router, RouterLink } from '@angular/router';
 
-import { AuthService } from '../../core/service/auth.service';
+import { AuthService } from '../../core/service/internal/auth.service';
 import { RegisterRole, Role } from '../../core/model/auth.model';
 
 import { ZardButtonComponent } from '@/shared/components/button/button.component';

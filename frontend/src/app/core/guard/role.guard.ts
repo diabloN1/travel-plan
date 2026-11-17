@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateChildFn, Router } from '@angular/router';
 
 import { Role } from '../model/auth.model';
-import { AuthService } from '../service/auth.service';
+import { AuthService } from '../service/internal/auth.service';
 import { ZardSonnerService } from '@/shared/components/sonner';
 
 export const roleGuard =

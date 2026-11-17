@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 
-import { AuthResult, LoginRequest, RegisterRequest, Role } from '../model/auth.model';
-import { TokenStorage } from '../utils/token-storage.util';
-import { decodeJwt, isExpired } from '../utils/jwt.util';
-import { API } from '../config/api.config';
+import { AuthResult, LoginRequest, RegisterRequest, Role } from '../../model/auth.model';
+import { TokenStorage } from '../../utils/token-storage.util';
+import { decodeJwt, isExpired } from '../../utils/jwt.util';
+import { API } from '../../config/api.config';
 
 @Injectable({
   providedIn: 'root',
@@ -48,17 +48,13 @@ export class AuthService {
   register(request: RegisterRequest): Observable<AuthResult> {
     return this.http
       .post<AuthResult>(`${API.auth.root + API.auth.register}`, request)
-      .pipe(
-        tap((response) => this.setSession(response))
-      );
+      .pipe(tap((response) => this.setSession(response)));
   }
 
   login(request: LoginRequest): Observable<AuthResult> {
     return this.http
       .post<AuthResult>(`${API.auth.root + API.auth.login}`, request)
-      .pipe(
-        tap((response) => this.setSession(response))
-      );
+      .pipe(tap((response) => this.setSession(response)));
   }
 
   logout(redirect = true): void {

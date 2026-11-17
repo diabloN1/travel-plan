@@ -3,8 +3,8 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-import { DestinationService } from '@/core/service/destination.service';
-import { AuthService } from '@/core/service/auth.service';
+import { DestinationService } from '@/core/service/internal/destination.service';
+import { AuthService } from '@/core/service/internal/auth.service';
 import { ZardSonnerService } from '@/shared/components/sonner/sonner.service';
 
 import {
@@ -109,20 +109,18 @@ export class ManagerDestinationsComponent implements OnInit {
   loadDestinations(): void {
     this.loading.set(true);
 
-    this.destinationService
-      .getMyDestinations(this.currentPage(), this.pageSize)
-      .subscribe({
-        next: (page) => {
-          this.destinations.set(page.content);
-          this.totalElements.set(page.totalElements);
-          this.totalPages.set(page.totalPages);
-          this.loading.set(false);
-        },
-        error: () => {
-          this.loading.set(false);
-          this.sonner.error('Unable to load your destinations.');
-        },
-      });
+    this.destinationService.getMyDestinations(this.currentPage(), this.pageSize).subscribe({
+      next: (page) => {
+        this.destinations.set(page.content);
+        this.totalElements.set(page.totalElements);
+        this.totalPages.set(page.totalPages);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.sonner.error('Unable to load your destinations.');
+      },
+    });
   }
 
   setSearch(value: string): void {
