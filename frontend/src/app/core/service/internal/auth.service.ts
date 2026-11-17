@@ -7,6 +7,7 @@ import { AuthResult, LoginRequest, RegisterRequest, Role } from '../../model/aut
 import { TokenStorage } from '../../utils/token-storage.util';
 import { decodeJwt, isExpired } from '../../utils/jwt.util';
 import { API } from '../../config/api.config';
+import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,7 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly storage = inject(TokenStorage);
   private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
 
   private readonly _token = signal<string | null>(this.storage.getToken());
 
@@ -73,10 +75,12 @@ export class AuthService {
   setSession(auth: AuthResult): void {
     this.storage.setToken(auth.accessToken);
     this._token.set(auth.accessToken);
+    this.userService.current.set(auth.user);
   }
 
   clearSession(): void {
     this.storage.clear();
     this._token.set(null);
+    this.userService.current.set(null);
   }
 }
