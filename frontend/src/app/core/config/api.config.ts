@@ -5,4 +5,8 @@ export const API = {
     register: "/register",
   },
 
+  destinations: {
+    root: "/api/destinations",
+    me: "/me",
+  }
 } as const;
