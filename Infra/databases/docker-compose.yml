@@ -1,0 +1,67 @@
+services:
+  neo4j:
+    image: neo4j:5-community
+    container_name: travel-plan-neo4j
+    restart: unless-stopped
+
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+
+    environment:
+      NEO4J_AUTH: ${NEO4J_AUTH:?NEO4J_AUTH is required}
+
+    networks:
+      - travel-internal-network
+    volumes:
+      - neo4j_data:/data
+
+  postgres:
+    image: postgres:17
+    container_name: travel-plan-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: postgres
+
+      USER_DB_USERNAME: ${USER_DB_USERNAME:?USER_DB_USERNAME is required}
+      USER_DB_PASSWORD: ${USER_DB_PASSWORD:?USER_DB_PASSWORD is required}
+
+      TRAVEL_DB_USERNAME: ${TRAVEL_DB_USERNAME:?TRAVEL_DB_USERNAME is required}
+      TRAVEL_DB_PASSWORD: ${TRAVEL_DB_PASSWORD:?TRAVEL_DB_PASSWORD is required}
+
+      BOOKING_DB_USERNAME: ${BOOKING_DB_USERNAME:?BOOKING_DB_USERNAME is required}
+      BOOKING_DB_PASSWORD: ${BOOKING_DB_PASSWORD:?BOOKING_DB_PASSWORD is required}
+
+      PAYMENT_DB_USERNAME: ${PAYMENT_DB_USERNAME:?PAYMENT_DB_USERNAME is required}
+      PAYMENT_DB_PASSWORD: ${PAYMENT_DB_PASSWORD:?PAYMENT_DB_PASSWORD is required}
+
+    networks:
+      - travel-internal-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: travel-plan-pgadmin
+    restart: unless-stopped
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${ADMIN_EMAIL:?ADMIN_EMAIL is required}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:?PGADMIN_PASSWORD is required}
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  neo4j_data:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  travel-internal-network:
+    external: true
