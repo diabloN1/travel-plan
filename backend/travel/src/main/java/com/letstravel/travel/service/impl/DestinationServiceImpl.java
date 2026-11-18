@@ -1,5 +1,6 @@
 package com.letstravel.travel.service.impl;
 
+import com.letstravel.common.exception.ForbiddenException;
 import com.letstravel.travel.dto.request.DestinationRequest;
 import com.letstravel.travel.dto.response.DestinationResponse;
 import com.letstravel.travel.entity.Destination;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.UUID;
 
@@ -39,9 +41,9 @@ public class DestinationServiceImpl implements DestinationService {
 
     @Override
     @Transactional(readOnly = true)
-    public DestinationResponse getById(UUID id, UUID managerId) {
+    public DestinationResponse getById(UUID id, Jwt jwt) {
 
-        Destination destination = findByIdAndManagerId(id, managerId);
+        Destination destination = findById(id, jwt);
 
         return destinationMapper.toResponse(destination);
     }
@@ -49,8 +51,11 @@ public class DestinationServiceImpl implements DestinationService {
     @Override
     @Transactional(readOnly = true)
     public Page<DestinationResponse> getByManager(
+            Jwt jwt,
             UUID managerId,
             Pageable pageable) {
+        validateAccessToManagerData(jwt, managerId);
+
         return destinationRepository.findByManagerId(managerId, pageable)
                 .map(destinationMapper::toResponse);
     }
@@ -59,8 +64,8 @@ public class DestinationServiceImpl implements DestinationService {
     public DestinationResponse update(
             UUID id,
             DestinationRequest request,
-            UUID managerId) {
-        Destination destination = findByIdAndManagerId(id, managerId);
+            Jwt jwt) {
+        Destination destination = findById(id, jwt);
 
         destinationMapper.updateEntity(request, destination);
 
@@ -70,9 +75,9 @@ public class DestinationServiceImpl implements DestinationService {
     }
 
     @Override
-    public void delete(UUID id, UUID managerId) {
+    public void delete(UUID id, Jwt jwt) {
 
-        Destination destination = findByIdAndManagerId(id, managerId);
+        Destination destination = findById(id, jwt);
 
         if (!destination.getTravels().isEmpty()) {
             throw new IllegalStateException(
@@ -82,10 +87,21 @@ public class DestinationServiceImpl implements DestinationService {
         destinationRepository.delete(destination);
     }
 
-    private Destination findByIdAndManagerId(UUID id, UUID managerId) {
+    private Destination findById(UUID id, Jwt jwt) {
+        Destination destination = destinationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Destination not found with ID: " + id));
 
-        return destinationRepository.findByIdAndManagerId(id, managerId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Destination not found with ID: " + id));
+        validateAccessToManagerData(jwt, destination.getManagerId());
+
+        return destination;
     }
+
+    private void validateAccessToManagerData(Jwt jwt, UUID managerId) {
+        UUID currentId = UUID.fromString(jwt.getSubject());
+        String role = jwt.getClaimAsString("role");
+
+        if (!currentId.equals(managerId) && !"ADMIN".equals(role))
+            throw new ForbiddenException("You do not have appropriate access for given action");
+    }
+
 }

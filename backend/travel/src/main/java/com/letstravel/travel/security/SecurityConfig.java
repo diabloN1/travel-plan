@@ -35,7 +35,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/travel/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/travel/**").permitAll()
+                        .requestMatchers("/api/destinations/**").hasAnyRole("TRAVEL_MANAGER", "ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth
                         .jwt(jwt -> jwt

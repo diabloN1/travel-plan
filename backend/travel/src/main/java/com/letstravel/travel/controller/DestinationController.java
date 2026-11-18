@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 
@@ -26,70 +26,57 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DestinationController {
 
-    private final DestinationService destinationService;
+        private final DestinationService destinationService;
 
-    @PostMapping
-    public ResponseEntity<DestinationResponse> create(
-            @Valid @RequestBody DestinationRequest request,
-            @AuthenticationPrincipal Jwt jwt
-    ) {
-        UUID managerId = getCurrentId(jwt);
+        @PostMapping
+        @PreAuthorize("hasRole('TRAVEL_MANAGER') or hasRole('ADMIN')")
+        public ResponseEntity<DestinationResponse> create(
+                        @Valid @RequestBody DestinationRequest request,
+                        @AuthenticationPrincipal Jwt jwt) {
+                UUID managerId = UUID.fromString(jwt.getSubject());
 
-        DestinationResponse response = destinationService.create(request, managerId);
+                DestinationResponse response = destinationService.create(request, managerId);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DestinationResponse> getById(
-            @PathVariable UUID id,
-            @AuthenticationPrincipal Jwt jwt
-    ) {
-        UUID managerId = getCurrentId(jwt);
+        @GetMapping("/{id}")
+        @PreAuthorize("hasRole('TRAVEL_MANAGER') or hasRole('ADMIN')")
+        public ResponseEntity<DestinationResponse> getById(
+                        @PathVariable UUID id,
+                        @AuthenticationPrincipal Jwt jwt) {
+                return ResponseEntity.ok(
+                                destinationService.getById(id, jwt));
+        }
 
-        return ResponseEntity.ok(
-                destinationService.getById(id, managerId)
-        );
-    }
+        @GetMapping("/me")
+        @PreAuthorize("hasRole('TRAVEL_MANAGER') or hasRole('ADMIN')")
+        public ResponseEntity<Page<DestinationResponse>> getMyDestinations(
+                        @AuthenticationPrincipal Jwt jwt,
+                        @PageableDefault(size = 10, sort = "name") Pageable pageable) {
+                UUID managerId = UUID.fromString(jwt.getSubject());
 
-    @GetMapping("/me")
-    public ResponseEntity<Page<DestinationResponse>> getMyDestinations(
-            @AuthenticationPrincipal Jwt jwt,
-            @PageableDefault(size = 10, sort = "name") Pageable pageable
-    ) {
-        UUID managerId = getCurrentId(jwt);
+                return ResponseEntity.ok(
+                                destinationService.getByManager(jwt, managerId, pageable));
+        }
 
-        return ResponseEntity.ok(
-                destinationService.getByManager(managerId, pageable)
-        );
-    }
+        @PutMapping("/{id}")
+        @PreAuthorize("hasRole('TRAVEL_MANAGER') or hasRole('ADMIN')")
+        public ResponseEntity<DestinationResponse> update(
+                        @PathVariable UUID id,
+                        @Valid @RequestBody DestinationRequest request,
+                        @AuthenticationPrincipal Jwt jwt) {
+                return ResponseEntity.ok(
+                                destinationService.update(id, request, jwt));
+        }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<DestinationResponse> update(
-            @PathVariable UUID id,
-            @Valid @RequestBody DestinationRequest request,
-            @AuthenticationPrincipal Jwt jwt
-    ) {
-        UUID managerId = getCurrentId(jwt);
+        @DeleteMapping("/{id}")
+        @PreAuthorize("hasRole('TRAVEL_MANAGER') or hasRole('ADMIN')")
+        public ResponseEntity<Void> delete(
+                        @PathVariable UUID id,
+                        @AuthenticationPrincipal Jwt jwt) {
+                destinationService.delete(id, jwt);
 
-        return ResponseEntity.ok(
-                destinationService.update(id, request, managerId)
-        );
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable UUID id,
-            @AuthenticationPrincipal Jwt jwt
-    ) {
-        UUID managerId = getCurrentId(jwt);
-
-        destinationService.delete(id, managerId);
-
-        return ResponseEntity.noContent().build();
-    }
-
-    private UUID getCurrentId(Jwt jwt) {
-        return UUID.fromString(jwt.getSubject());
-    }
+                return ResponseEntity.noContent().build();
+        }
 }
