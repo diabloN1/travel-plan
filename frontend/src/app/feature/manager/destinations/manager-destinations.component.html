@@ -176,12 +176,14 @@
         </div>
 
         <!-- FORM COMPONENT -->
-        <app-destination-form
-          [destination]="editingDestination()"
-          [saving]="saving()"
-          (save)="saveDestination($event)"
-          (cancel)="closeForm()"
-        />
+        @if (showForm()) {
+          <app-destination-form
+            [destination]="editingDestination()"
+            [saving]="saving()"
+            (save)="saveDestination($event)"
+            (cancel)="closeForm()"
+          />
+        }
       </div>
     </div>
   }

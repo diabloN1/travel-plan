@@ -71,6 +71,7 @@ export class ManagerDestinationsComponent implements OnInit {
   readonly destinations = signal<DestinationResponse[]>([]);
 
   readonly loading = signal(false);
+  readonly loadingDestination = signal(false);
   readonly saving = signal(false);
 
   readonly searchQuery = signal('');
@@ -151,8 +152,23 @@ export class ManagerDestinationsComponent implements OnInit {
   }
 
   openEditForm(destination: DestinationResponse): void {
-    this.editingDestination.set(destination);
-    this.showForm.set(true);
+    if (this.loadingDestination()) {
+      return;
+    }
+
+    this.loadingDestination.set(true);
+
+    this.destinationService.getById(destination.id).subscribe({
+      next: (fullDestination) => {
+        this.editingDestination.set(fullDestination);
+        this.showForm.set(true);
+        this.loadingDestination.set(false);
+      },
+      error: () => {
+        this.loadingDestination.set(false);
+        this.sonner.error('Unable to load destination details.');
+      },
+    });
   }
 
   closeForm(): void {
@@ -161,6 +177,10 @@ export class ManagerDestinationsComponent implements OnInit {
   }
 
   saveDestination(request: DestinationRequest): void {
+    if (this.saving()) {
+      return;
+    }
+
     this.saving.set(true);
 
     const destination = this.editingDestination();
@@ -173,9 +193,11 @@ export class ManagerDestinationsComponent implements OnInit {
       next: () => {
         this.saving.set(false);
         this.closeForm();
+
         this.sonner.success(
           destination ? 'Destination updated successfully!' : 'Destination created successfully!',
         );
+
         this.loadDestinations();
       },
       error: () => {
