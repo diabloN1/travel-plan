@@ -95,7 +95,7 @@ public class DestinationServiceImpl implements DestinationService {
     }
 
     private Destination findById(UUID id, Jwt jwt) {
-        Destination destination = destinationRepository.findById(id)
+        Destination destination = destinationRepository.findWithActivitiesById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Destination not found with ID: " + id));
 
         validateAccessToManagerData(jwt, destination.getManagerId());

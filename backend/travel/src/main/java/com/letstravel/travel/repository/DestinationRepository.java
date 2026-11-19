@@ -17,4 +17,7 @@ public interface DestinationRepository extends JpaRepository<Destination, UUID> 
 
     @EntityGraph(attributePaths = "activities")
     Page<Destination> findByManagerId(UUID managerId, Pageable pageable);
+
+    @EntityGraph(attributePaths = "activities")
+    Optional<Destination> findWithActivitiesById(UUID id);
 }
