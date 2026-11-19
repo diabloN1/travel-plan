@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-5 p-5 sm:p-6">
-  <!-- GOOGLE MAP -->
+  <!-- MAP -->
   <div class="space-y-3">
     <div>
       <h3 class="text-sm font-semibold text-foreground">Destination location</h3>
@@ -76,15 +76,106 @@
       [zInvalid]="form.controls.type.touched && form.controls.type.invalid"
     >
       <z-select-group>
-        <z-select-item zValue="ACTIVITIES"> Activities </z-select-item>
-        <z-select-item zValue="ACCOMODATION"> Accommodation </z-select-item>
-        <z-select-item zValue="OTHER"> Other </z-select-item>
+        <z-select-item zValue="ACTIVITIES">Activities</z-select-item>
+        <z-select-item zValue="ACCOMODATION">Accommodation</z-select-item>
+        <z-select-item zValue="OTHER">Other</z-select-item>
       </z-select-group>
     </z-select>
 
     @if (form.controls.type.touched && form.controls.type.invalid) {
       <p class="mt-1.5 text-xs text-destructive">Please select a destination category.</p>
     }
+  </div>
+
+  <!-- ACTIVITIES -->
+  <div class="space-y-4 border-t border-border pt-5" formArrayName="activities">
+    <div class="flex items-center justify-between gap-3">
+      <div>
+        <h3 class="text-sm font-semibold text-foreground">Activities</h3>
+
+        <p class="mt-1 text-xs text-muted-foreground">
+          Add activities available at this destination.
+        </p>
+      </div>
+
+      <span class="shrink-0 text-xs text-muted-foreground">
+        {{ activities.length }}/{{ MAX_ACTIVITIES }}
+      </span>
+    </div>
+
+    @for (activity of activities.controls; track activity; let i = $index) {
+      <div [formGroupName]="i" class="space-y-3 rounded-lg border border-border bg-muted/20 p-4">
+        <div class="flex items-center justify-between">
+          <h4 class="text-sm font-medium text-foreground">Activity {{ i + 1 }}</h4>
+
+          <button
+            z-button
+            zType="ghost"
+            type="button"
+            class="text-destructive hover:text-destructive"
+            (click)="removeActivity(i)"
+          >
+            <ng-icon name="lucideTrash" size="16" />
+          </button>
+        </div>
+
+        <!-- ACTIVITY TITLE -->
+        <div>
+          <label class="mb-2 block text-sm font-medium text-foreground"> Activity name * </label>
+
+          <input
+            z-input
+            class="w-full"
+            formControlName="title"
+            placeholder="e.g. Camel Riding"
+            maxlength="100"
+          />
+
+          @if (activity.get('title')?.touched && activity.get('title')?.invalid) {
+            <p class="mt-1.5 text-xs text-destructive">
+              Activity name is required (maximum 100 characters).
+            </p>
+          }
+        </div>
+
+        <!-- ACTIVITY DESCRIPTION -->
+        <div>
+          <label class="mb-2 block text-sm font-medium text-foreground"> Description </label>
+
+          <textarea
+            z-textarea
+            formControlName="description"
+            rows="2"
+            placeholder="Describe this activity..."
+            maxlength="1000"
+            class="w-full resize-none rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+          ></textarea>
+        </div>
+      </div>
+    }
+
+    @if (activities.length === 0) {
+      <div
+        class="flex flex-col items-center justify-center rounded-lg border border-dashed border-border px-4 py-8 text-center"
+      >
+        <p class="text-sm font-medium text-foreground">No activities added</p>
+
+        <p class="mt-1 text-xs text-muted-foreground">
+          Add activities to let travelers know what's available.
+        </p>
+      </div>
+    }
+
+    <button
+      z-button
+      zType="outline"
+      type="button"
+      class="w-full"
+      [disabled]="activities.length >= MAX_ACTIVITIES"
+      (click)="addActivity()"
+    >
+      + Add activity
+    </button>
   </div>
 
   <!-- COORDINATES -->
