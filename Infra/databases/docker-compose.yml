@@ -54,6 +54,8 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: ${ADMIN_EMAIL:?ADMIN_EMAIL is required}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:?PGADMIN_PASSWORD is required}
+    networks:
+      - travel-internal-network
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
