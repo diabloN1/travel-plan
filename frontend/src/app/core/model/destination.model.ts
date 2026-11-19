@@ -11,6 +11,7 @@ export interface DestinationRequest {
   latitude?: number | null;
   longitude?: number | null;
   type: DestinationType;
+  activities?: ActivityRequest[] | null;
 }
 
 export interface DestinationResponse {
@@ -23,6 +24,12 @@ export interface DestinationResponse {
   longitude: number | null;
   type: DestinationType;
   activities: ActivitySummaryResponse[];
+}
+
+export interface ActivityRequest {
+  id?: string | null;
+  title: string;
+  description?: string | null;
 }
 
 export interface ActivitySummaryResponse {
