@@ -6,6 +6,7 @@ import com.letstravel.travel.dto.response.DestinationResponse;
 import com.letstravel.travel.entity.Destination;
 import com.letstravel.travel.mapper.DestinationMapper;
 import com.letstravel.travel.repository.DestinationRepository;
+import com.letstravel.travel.service.ActivityService;
 import com.letstravel.travel.service.DestinationService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -27,15 +28,20 @@ public class DestinationServiceImpl implements DestinationService {
 
     private final DestinationRepository destinationRepository;
     private final DestinationMapper destinationMapper;
+    private final ActivityService activityService;
 
     @Override
     @Transactional
     public DestinationResponse create(DestinationRequest request, UUID managerId) {
+
         Destination destination = destinationMapper.toEntity(request);
 
         destination.setManagerId(managerId);
 
+        activityService.createActivities(destination, request.activities());
+
         Destination saved = destinationRepository.save(destination);
+
         return destinationMapper.toResponse(saved);
     }
 
@@ -65,13 +71,14 @@ public class DestinationServiceImpl implements DestinationService {
             UUID id,
             DestinationRequest request,
             Jwt jwt) {
+
         Destination destination = findById(id, jwt);
 
         destinationMapper.updateEntity(request, destination);
 
-        Destination updated = destinationRepository.save(destination);
+        activityService.syncActivities(destination, request.activities());
 
-        return destinationMapper.toResponse(updated);
+        return destinationMapper.toResponse(destinationRepository.save(destination));
     }
 
     @Override

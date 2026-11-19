@@ -14,11 +14,15 @@ import org.mapstruct.MappingTarget;
 )
 public interface DestinationMapper {
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "managerId", ignore = true)
+    @Mapping(target = "travels", ignore = true)
     Destination toEntity(DestinationRequest request);
 
     DestinationResponse toResponse(Destination destination);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "managerId", ignore = true)
     @Mapping(target = "activities", ignore = true)
     @Mapping(target = "travels", ignore = true)
     void updateEntity(
