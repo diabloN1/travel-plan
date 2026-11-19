@@ -10,6 +10,7 @@ import com.letstravel.travel.dto.request.ActivityRequest;
 import com.letstravel.travel.entity.Activity;
 import com.letstravel.travel.entity.Destination;
 import com.letstravel.travel.mapper.ActivityMapper;
+import com.letstravel.travel.service.ActivityService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ActivityServiceImpl {
+public class ActivityServiceImpl implements ActivityService {
 
     private final ActivityMapper activityMapper;
 

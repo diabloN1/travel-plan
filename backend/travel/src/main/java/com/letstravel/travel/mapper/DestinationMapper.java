@@ -8,15 +8,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(
-        componentModel = "spring",
-        uses = ActivityMapper.class
-)
+@Mapper(componentModel = "spring", uses = ActivityMapper.class)
 public interface DestinationMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "managerId", ignore = true)
     @Mapping(target = "travels", ignore = true)
+    @Mapping(target = "activities", ignore = true)
     Destination toEntity(DestinationRequest request);
 
     DestinationResponse toResponse(Destination destination);
