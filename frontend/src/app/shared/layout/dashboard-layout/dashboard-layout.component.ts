@@ -11,6 +11,8 @@ import {
   lucideUserRound,
   lucideLogOut,
   lucidePanelLeft,
+  lucideMap,
+  lucideTicketsPlane,
 } from '@ng-icons/lucide';
 
 import { ZardSidebarImports } from '@/shared/components/sidebar/sidebar.imports';
@@ -32,6 +34,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
       lucideUserRound,
       lucideLogOut,
       lucidePanelLeft,
+      lucideMap,
+      lucideTicketsPlane
     }),
   ],
 })
